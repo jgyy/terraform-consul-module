@@ -7,13 +7,14 @@ resource "aws_instance" "server" {
     subnet_id = "${lookup(var.subnets, count.index % var.servers)}"
 
     connection {
-        user = "${lookup(var.user, var.platform)}"
+        user        = "${lookup(var.user, var.platform)}"
         private_key = "${file("${var.key_path}")}"
+        host        = self.public_ip
     }
 
     #Instance tags
-    tags {
-        Name = "${var.tagName}-${count.index}"
+    tags = {
+        Name       = "${var.tagName}-${count.index}"
         ConsulRole = "Server"
     }
 
